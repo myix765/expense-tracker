@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Platform } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function NavBar() {
@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 48,
-    paddingTop: 10,
-    paddingBottom: 32,
+    paddingTop: 12,
+    paddingBottom: Platform.OS === "ios" ? 32 : 16,
   },
   navLink: {
     alignItems: 'center',

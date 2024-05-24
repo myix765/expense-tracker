@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Pressable, Modal, Platform, TextInput } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Pressable, Modal, Platform, TextInput, Dimensions } from 'react-native';
 import {
   useFonts,
   Poppins_500Medium,
@@ -14,6 +14,9 @@ import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePicker from 'react-native-ui-datepicker';
 import dayjs from 'dayjs';
 import ExpenseListItem from './components/ExpenseListItem';
+import SafeAreaViewAndroid from './constants/SafeAreaViewAndroid';
+
+const screenHeight = Dimensions.get('window').height;
 
 export default function App() {
   const [addModalVisible, setAddModalVisible] = useState(false);
@@ -25,15 +28,22 @@ export default function App() {
     itemStore: "",
     itemLocation: "",
     itemDate: dayjs(),
-  }
+  };
   const [item, setItem] = useState(itemDefault);
-  const exampleItem = {
-    itemCategory: "technology",
-    itemName: "iPad",
-    itemPrice: 699.99,
-    itemStore: "Apple Store",
-    itemLocation: "Some mall",
-    itemDate: dayjs(),
+  const [expenses, setExpense] = useState([]);
+  const [totalExpense, setTotalExpense] = useState(0);
+
+  function addExpense() {
+    console.log(item);
+    setExpense((currentExpenses) => [
+      ...currentExpenses,
+      item,
+    ]);
+    setTotalExpense(totalExpense + item.itemPrice);
+
+    setItem(itemDefault);
+    setAddModalVisible(false);
+    setDateModalVisible(false);
   }
 
   const handleItemCategoryChange = (input) => {
@@ -51,7 +61,7 @@ export default function App() {
   const handleItemPriceChange = (input) => {
     setItem({
       ...item,
-      itemPrice: input
+      itemPrice: Number(input)
     });
   }
   const handleItemStoreChange = (input) => {
@@ -98,160 +108,19 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView style={styles.contentContainer}>
-        <Modal
-          animationType='fade'
-          transparent={true}
-          visible={addModalVisible || dateModalVisible}
-          onRequestClose={() => {
-            setAddModalVisible(false);
-            setDateModalVisible(false);
-          }}
-        >
-          <Pressable
-            onPress={() => setAddModalVisible(false)}
-            style={[
-              Platform.OS === 'ios' ? styles.iOSBackdrop : styles.androidBackdrop, styles.backdrop,
-            ]}
-          />
-          <View style={styles.modalCenter}>
-            <View style={styles.modal}>
-              <Pressable
-                style={styles.closeButton}
-                onPress={() => {
-                  dateModalVisible ? setDateModalVisible(false) : setAddModalVisible(!addModalVisible)
-                  setItem(itemDefault);
-                }}
-              >
-                <MaterialIcons name='close' size={22} color={'black'}/>
-              </Pressable>
-              {dateModalVisible ? (
-                <View style={{ marginTop: '8%' }}>
-                  <DateTimePicker
-                    mode="single"
-                    date={item.itemDate}
-                    onChange={date => {handleItemDateChange(date.date)}}
-                  />
-                </View>
-              ) : (
-                <View>
-                  <View style={[styles.rowCenter, { marginBottom: 12 }]}>
-                    <Text style={styles.categoryHeader}>Category:</Text>
-                    <SelectDropdown
-                      data={categories}
-                      onSelect={(selectedCategory) => handleItemCategoryChange(selectedCategory)}
-                      renderButton={(selectedCategory, isOpen) => {
-                        return (
-                          <View style={[styles.categoryDropdownButton, { borderColor: (selectedCategory && selectedCategory.color) || 'black' , paddingRight: 6 }]}>
-                            <View style={[styles.rowCenter, styles.categorySelectorItem]}>
-                              {selectedCategory && (
-                                <MaterialIcons
-                                  name={selectedCategory.icon}
-                                  size={12}
-                                  color={selectedCategory.color}
-                                />
-                              )}
-                              <Text
-                                style={styles.categoryLabel}
-                              >{(selectedCategory && selectedCategory.title) || 'Pick Category'}</Text>
-                            </View>
-                            <MaterialIcons
-                              name={isOpen ? 'expand-less' : 'expand-more'}
-                              size={24}
-                              color={'black'}
-                            />
-                          </View>
-                        )
-                      }}
-                      renderItem={(category, index, isSelected) => {
-                        return (
-                          <View style={[styles.rowCenter, styles.categorySelectorItem, { paddingVertical: 4 }]}>
-                            <MaterialIcons
-                              name={'circle'}
-                              size={12}
-                              color={category.color}
-                            />
-                            <Text style={styles.categoryLabel}>{category.title}</Text>
-                          </View>
-                        )
-                      }}
-                      dropdownStyle={styles.categoryDropdown}
-                      dropdownOverlayColor={'transparent'}
-                      showsVerticalScrollIndicator
-                    />
-                  </View>
-                  <View style={styles.itemInputs}>
-                    <View style={styles.rowCenter}>
-                      <TextInput
-                        style={[styles.itemInputText, styles.itemInput, { width: '60%' }]}
-                        onChangeText={handleItemNameChange}
-                        value={item.itemName}
-                        placeholder='Item Name'
-                      />
-                      <View style={[styles.rowCenter, { justifyContent: 'flex-end', width: '40%' }]}>
-                        <Text style={[styles.itemInputText, styles.itemInput]}>$ </Text>
-                        <TextInput
-                          style={[styles.itemInputText, styles.itemInput, { width: '60%'}]}
-                          onChangeText={handleItemPriceChange}
-                          value={item.itemPrice}
-                          placeholder='Price'
-                          keyboardType='numeric'
-                        />
-                      </View>
-                    </View>
-                    <TextInput
-                      style={[styles.itemInputText, styles.itemInput]}
-                      onChangeText={handleItemStoreChange}
-                      value={item.itemStore}
-                      placeholder='Store'
-                    />
-                    <TextInput
-                      style={[styles.itemInputText, styles.itemInput]}
-                      onChangeText={handleItemLocationChange}
-                      value={item.itemLocation}
-                      placeholder='Location'
-                    />
-                  </View>
-                  <View style={{ marginTop: 16 }}>
-                    <View style={styles.rowCenter}>
-                      <Text style={[styles.itemInputText, styles.itemInput, { marginRight: 16 }]}>Date:</Text>
-                      {/* date picker */}
-                      <Pressable
-                        style={styles.datePickerButton}
-                        onPress={() => setDateModalVisible(true)}
-                      >
-                        <Text style={styles.itemInputText}>{item.itemDate.format('MM/DD/YY')}</Text>
-                      </Pressable>
-                    </View>
-                  </View>
-                  <Pressable
-                    style={{ alignItems: 'center', marginTop: 24 }}
-                    onPress={() => {
-                      console.log(item);
-                      setItem(itemDefault);
-                      setAddModalVisible(false);
-                      setDateModalVisible(false);
-                    }}
-                  >
-                    <RectButton
-                      width={208}
-                      text={'Add Expense'}
-                    />
-                  </Pressable>
-                </View>
-              )}
-            </View>
-          </View>
-        </Modal>
+      <SafeAreaView style={[styles.contentContainer, SafeAreaViewAndroid.AndroidSafeArea]}>
         <Text style={styles.header}>EXPENSES</Text>
-        <Text style={styles.moneyHeader}>$333.17</Text>
+        <Text style={styles.moneyHeader}>{'$' + totalExpense}</Text>
         <View style={styles.list}>
           <Text style={styles.listHeader}>Transactions</Text>
           <View style={{ gap: 10 }}>
-            <ExpenseListItem
-              borderColor={'orange'}
-              item={exampleItem}
-            />
+            {expenses.map((expense) => 
+              <ExpenseListItem
+                key={expenses.indexOf(expense)} // temporary method
+                borderColor={'orange'}
+                item={expense}
+              />
+            )}
           </View>
         </View>
         <Pressable
@@ -261,6 +130,147 @@ export default function App() {
           <AddButton/>
         </Pressable>
       </SafeAreaView>
+      <Modal
+        animationType='fade'
+        transparent={true}
+        visible={addModalVisible || dateModalVisible}
+        onRequestClose={() => {
+          setAddModalVisible(false);
+          setDateModalVisible(false);
+        }}
+      >
+        <Pressable
+          onPress={() => setAddModalVisible(false)}
+          style={[
+            Platform.OS === 'ios' ? styles.iOSBackdrop : styles.androidBackdrop,
+            styles.backdrop,
+            // doesn't reach top of screen in android, on ios doesn't work
+          ]}
+        />
+        <View style={styles.modalCenter}>
+          <View style={styles.modal}>
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => {
+                dateModalVisible ? setDateModalVisible(false) : setAddModalVisible(!addModalVisible)
+                setItem(itemDefault);
+              }}
+            >
+              <MaterialIcons name='close' size={22} color={'black'}/>
+            </Pressable>
+            {dateModalVisible ? (
+              <View style={{ marginTop: '8%' }}>
+                <DateTimePicker
+                  mode="single"
+                  date={item.itemDate}
+                  onChange={date => {handleItemDateChange(date.date)}}
+                />
+              </View>
+            ) : (
+              <View>
+                <View style={[styles.rowCenter, { marginBottom: 12 }]}>
+                  <Text style={styles.categoryHeader}>Category:</Text>
+                  <SelectDropdown
+                    data={categories}
+                    onSelect={(selectedCategory) => handleItemCategoryChange(selectedCategory)}
+                    renderButton={(selectedCategory, isOpen) => {
+                      return (
+                        <View style={[styles.categoryDropdownButton, { borderColor: (selectedCategory && selectedCategory.color) || 'black' , paddingRight: 6 }]}>
+                          <View style={[styles.rowCenter, styles.categorySelectorItem]}>
+                            {selectedCategory && (
+                              <MaterialIcons
+                                name={selectedCategory.icon}
+                                size={12}
+                                color={selectedCategory.color}
+                              />
+                            )}
+                            <Text
+                              style={styles.categoryLabel}
+                            >{(selectedCategory && selectedCategory.title) || 'Pick Category'}</Text>
+                          </View>
+                          <MaterialIcons
+                            name={isOpen ? 'expand-less' : 'expand-more'}
+                            size={24}
+                            color={'black'}
+                          />
+                        </View>
+                      )
+                    }}
+                    renderItem={(category, index, isSelected) => {
+                      return (
+                        <View style={[styles.rowCenter, styles.categorySelectorItem, { paddingVertical: 4 }]}>
+                          <MaterialIcons
+                            name={'circle'}
+                            size={12}
+                            color={category.color}
+                          />
+                          <Text style={styles.categoryLabel}>{category.title}</Text>
+                        </View>
+                      )
+                    }}
+                    dropdownStyle={styles.categoryDropdown}
+                    dropdownOverlayColor={'transparent'}
+                    showsVerticalScrollIndicator
+                  />
+                </View>
+                <View style={styles.itemInputs}>
+                  <View style={styles.rowCenter}>
+                    <TextInput
+                      style={[styles.itemInputText, styles.itemInput, { width: '60%' }]}
+                      onChangeText={handleItemNameChange}
+                      value={item.itemName}
+                      placeholder='Item Name'
+                    />
+                    <View style={[styles.rowCenter, { justifyContent: 'flex-end', width: '40%' }]}>
+                      <Text style={[styles.itemInputText, styles.itemInput]}>$ </Text>
+                      <TextInput
+                        style={[styles.itemInputText, styles.itemInput, { width: '60%'}]}
+                        onChangeText={handleItemPriceChange}
+                        value={item.itemPrice}
+                        placeholder='Price'
+                        keyboardType='numeric'
+                      />
+                    </View>
+                  </View>
+                  <TextInput
+                    style={[styles.itemInputText, styles.itemInput]}
+                    onChangeText={handleItemStoreChange}
+                    value={item.itemStore}
+                    placeholder='Store'
+                  />
+                  <TextInput
+                    style={[styles.itemInputText, styles.itemInput]}
+                    onChangeText={handleItemLocationChange}
+                    value={item.itemLocation}
+                    placeholder='Location'
+                  />
+                </View>
+                <View style={{ marginTop: 16 }}>
+                  <View style={styles.rowCenter}>
+                    <Text style={[styles.itemInputText, styles.itemInput, { marginRight: 16 }]}>Date:</Text>
+                    {/* date picker */}
+                    <Pressable
+                      style={styles.datePickerButton}
+                      onPress={() => setDateModalVisible(true)}
+                    >
+                      <Text style={styles.itemInputText}>{item.itemDate.format('MM/DD/YY')}</Text>
+                    </Pressable>
+                  </View>
+                </View>
+                <Pressable
+                  style={{ alignItems: 'center', marginTop: 24 }}
+                  onPress={addExpense}
+                >
+                  <RectButton
+                    width={208}
+                    text={'Add Expense'}
+                  />
+                </Pressable>
+              </View>
+            )}
+          </View>
+        </View>
+      </Modal>
       <NavBar/>
     </View>
   );
@@ -310,7 +320,7 @@ const styles = StyleSheet.create({
   },
   modal: {
     width: '90%',
-    height: '50%',
+    height: screenHeight / 2,
     backgroundColor: '#fff',
     borderRadius: 32,
     paddingVertical: 32,
