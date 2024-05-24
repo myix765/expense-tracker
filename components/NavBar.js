@@ -1,18 +1,7 @@
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import {
-  useFonts,
-  Poppins_600SemiBold,
-} from '@expo-google-fonts/poppins';
 
 export default function NavBar() {
-  const [fontsLoaded] = useFonts({
-    Poppins_600SemiBold,
-  });
-
-  if (!fontsLoaded) {
-    return <Text>Loading...</Text>
-  }
 
   return (
     <View style={styles.navBar}>

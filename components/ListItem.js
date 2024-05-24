@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-export default function ListItem({ text, borderColor }) {
+export default function ListItem({ children, borderColor }) {
   const borderColorStyle = { borderColor: borderColor };
 
   return (
   <View style={[styles.listItem, borderColorStyle]}>
-      <Text style={styles.listItemHeader}>{text}</Text>
+    {children}
   </View>
   )
 }
@@ -16,13 +16,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     width: '100%',
 
-    paddingTop: 13,
-    paddingBottom: 14,
+    paddingVertical: 14,
     paddingLeft: 18,
-    paddingRight: 13,
+    paddingRight: 15,
   },
-  listItemHeader: {
-    fontFamily: 'Poppins_500Medium',
-    fontSize: 15,
-  }
 })

@@ -7,13 +7,13 @@ import {
 } from '@expo-google-fonts/poppins';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-import ListItem from './components/ListItem';
 import AddButton from './components/AddButton';
 import NavBar from './components/NavBar';
 import RectButton from './components/RectButton';
 import SelectDropdown from 'react-native-select-dropdown';
 import DateTimePicker from 'react-native-ui-datepicker';
 import dayjs from 'dayjs';
+import ExpenseListItem from './components/ExpenseListItem';
 
 export default function App() {
   const [addModalVisible, setAddModalVisible] = useState(false);
@@ -27,11 +27,19 @@ export default function App() {
     itemDate: dayjs(),
   }
   const [item, setItem] = useState(itemDefault);
+  const exampleItem = {
+    itemCategory: "technology",
+    itemName: "iPad",
+    itemPrice: 699.99,
+    itemStore: "Apple Store",
+    itemLocation: "Some mall",
+    itemDate: dayjs(),
+  }
 
   const handleItemCategoryChange = (input) => {
     setItem({
       ...item,
-      itemCategory: input
+      itemCategory: input.title
     });
   }
   const handleItemNameChange = (input) => {
@@ -66,15 +74,6 @@ export default function App() {
     setDateModalVisible(false);
   }
 
-  const [fontsLoaded] = useFonts({
-    Poppins_500Medium,
-    Poppins_600SemiBold,
-  });
-
-  if (!fontsLoaded) {
-    return <Text>Loading...</Text>
-  }
-
   const categories = [
     {
       title: 'food',
@@ -87,6 +86,15 @@ export default function App() {
       color: 'aqua'
     }
   ]
+
+  const [fontsLoaded] = useFonts({
+    Poppins_500Medium,
+    Poppins_600SemiBold,
+  });
+
+  if (!fontsLoaded) {
+    return <Text>Loading...</Text>
+  }
 
   return (
     <View style={styles.container}>
@@ -240,9 +248,9 @@ export default function App() {
         <View style={styles.list}>
           <Text style={styles.listHeader}>Transactions</Text>
           <View style={{ gap: 10 }}>
-            <ListItem
-              text='testing'
-              borderColor={'red'}
+            <ExpenseListItem
+              borderColor={'orange'}
+              item={exampleItem}
             />
           </View>
         </View>

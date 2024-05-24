@@ -1,18 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
-import {
-  useFonts,
-  Poppins_500Medium,
-} from '@expo-google-fonts/poppins';
 
 export default function AddButton() {
-  const [fontsLoaded] = useFonts({
-    Poppins_500Medium,
-  });
-
-  if (!fontsLoaded) {
-    return <Text>Loading...</Text>
-  }
-
   return (
     <View style={styles.container}>
       <View style={{...styles.circleBorder, ...{ backgroundColor: 'black' }, ...styles.backCircle}}></View>
