@@ -1,8 +1,7 @@
 import { StyleSheet, Text, View, Pressable, Platform } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-export default function NavBar() {
-
+const NavBar: React.FC = () => {
   return (
     <View style={styles.navBar}>
       <Pressable style={styles.navLink}>
@@ -42,3 +41,5 @@ const styles = StyleSheet.create({
     fontSize: 10,
   }
 })
+
+export default NavBar;

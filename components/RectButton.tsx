@@ -1,18 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native';
-import {
-  useFonts,
-  Poppins_500Medium,
-} from '@expo-google-fonts/poppins';
 
-export default function RectButton({ width, text }) {
-  const [fontsLoaded] = useFonts({
-    Poppins_500Medium,
-  });
+interface RectButtonProps {
+  width: number;
+  text: string;
+}
 
-  if (!fontsLoaded) {
-    return <Text>Loading...</Text>
-  }
-
+const RectButton: React.FC<RectButtonProps> = ({ width, text }) => {
   const padddingOffset = 4;
   const height = 46;
   const rectWidth = { width: width };
@@ -53,3 +46,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 })
+
+export default RectButton;

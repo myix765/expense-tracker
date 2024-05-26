@@ -1,10 +1,23 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import dayjs from 'dayjs';
 
 import ListItem from './ListItem';
 
-export default function ExpenseListItem({ item, borderColor}) {
+interface ExpenseListItemProps {
+  item: {
+    itemCategory: string;
+    itemName: string;
+    itemPrice: number;
+    itemStore: string;
+    itemLocation: string;
+    itemDate: dayjs.Dayjs;
+  };
+  borderColor: string;
+}
+
+const ExpenseListItem: React.FC<ExpenseListItemProps> = ({ item, borderColor}) => {
   const [isMinimized, setMinimized] = useState(false);
 
   return (
@@ -67,3 +80,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 })
+
+export default ExpenseListItem;
