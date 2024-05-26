@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Pressable, Modal, Platform, TextInput, Dimensions } from 'react-native';
 import {
   useFonts,
@@ -21,6 +21,7 @@ const screenHeight = Dimensions.get('window').height;
 export default function App() {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [dateModalVisible, setDateModalVisible] = useState(false);
+
   const itemDefault = {
     itemCategory: "",
     itemName: "",
@@ -29,11 +30,20 @@ export default function App() {
     itemLocation: "",
     itemDate: dayjs(),
   };
+
+  interface ItemType {
+    itemCategory: string;
+    itemName: string;
+    itemPrice: number;
+    itemStore: string;
+    itemLocation: string;
+    itemDate: dayjs.Dayjs;
+  };
   const [item, setItem] = useState(itemDefault);
-  const [expenses, setExpense] = useState([]);
+  const [expenses, setExpense] = useState<ItemType[]>([]);
   const [totalExpense, setTotalExpense] = useState(0);
 
-  function addExpense() {
+  const addExpense = (): void => {
     console.log(item);
     setExpense((currentExpenses) => [
       ...currentExpenses,
@@ -45,38 +55,46 @@ export default function App() {
     setAddModalVisible(false);
     setDateModalVisible(false);
   }
-
-  const handleItemCategoryChange = (input) => {
+  
+  interface CategoryType {
+    title: string;
+    icon: string;
+    color: string;
+}
+  const handleItemCategoryChange = (input: CategoryType) => {
     setItem({
       ...item,
       itemCategory: input.title
     });
   }
-  const handleItemNameChange = (input) => {
+  const handleItemNameChange = (input: string) => {
     setItem({
       ...item,
       itemName: input
     });
   };
-  const handleItemPriceChange = (input) => {
-    setItem({
-      ...item,
-      itemPrice: Number(input)
-    });
+  const handleItemPriceChange = (input: string) => {
+    const price = Number(input);
+    if (input === '' || !isNaN(price)) {
+      setItem({
+        ...item,
+        itemPrice: price,
+      });
+    }
   }
-  const handleItemStoreChange = (input) => {
+  const handleItemStoreChange = (input: string) => {
     setItem({
       ...item,
       itemStore: input
     });
   }
-  const handleItemLocationChange = (input) => {
+  const handleItemLocationChange = (input: string) => {
     setItem({
       ...item,
       itemLocation: input
     });
   }
-  const handleItemDateChange = (input) => {
+  const handleItemDateChange = (input: dayjs.Dayjs) => {
     setItem({
       ...item,
       itemDate: input
@@ -226,9 +244,9 @@ export default function App() {
                       <TextInput
                         style={[styles.itemInputText, styles.itemInput, { width: '60%'}]}
                         onChangeText={handleItemPriceChange}
-                        value={item.itemPrice}
+                        value={item.itemPrice === 0 ? '' : item.itemPrice.toString()}
                         placeholder='Price'
-                        keyboardType='numeric'
+                        keyboardType='decimal-pad'
                       />
                     </View>
                   </View>

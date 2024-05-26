@@ -1,6 +1,11 @@
 import { StyleSheet, View } from 'react-native';
 
-export default function ListItem({ children, borderColor }) {
+interface ListItemProps {
+  children: React.ReactNode;
+  borderColor: string;
+}
+
+const ListItem: React.FC<ListItemProps> = ({ children, borderColor }) => {
   const borderColorStyle = { borderColor: borderColor };
 
   return (
@@ -21,3 +26,5 @@ const styles = StyleSheet.create({
     paddingRight: 15,
   },
 })
+
+export default ListItem;

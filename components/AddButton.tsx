@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function AddButton() {
+const AddButton: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={{...styles.circleBorder, ...{ backgroundColor: 'black' }, ...styles.backCircle}}></View>
@@ -42,3 +42,5 @@ const styles = StyleSheet.create({
     right: 0,
   },
 })
+
+export default AddButton;
