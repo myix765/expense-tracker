@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import dayjs from 'dayjs';
 
+import { Dayjs } from 'dayjs';
+import { DateType } from 'react-native-ui-datepicker';
 import ListItem from './ListItem';
 
 interface ExpenseListItemProps {
@@ -12,7 +13,7 @@ interface ExpenseListItemProps {
     itemPrice: number;
     itemStore: string;
     itemLocation: string;
-    itemDate: dayjs.Dayjs;
+    itemDate: Dayjs | DateType;
   };
   borderColor: string;
 }

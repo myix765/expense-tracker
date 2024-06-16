@@ -11,21 +11,22 @@ import AddButton from './components/AddButton';
 import NavBar from './components/NavBar';
 import RectButton from './components/RectButton';
 import SelectDropdown from 'react-native-select-dropdown';
-import DateTimePicker from 'react-native-ui-datepicker';
-import dayjs from 'dayjs';
+import DateTimePicker, { DateType } from 'react-native-ui-datepicker';
+import dayjs, { Dayjs } from 'dayjs';
 import ExpenseListItem from './components/ExpenseListItem';
 import SafeAreaViewAndroid from './constants/SafeAreaViewAndroid';
+import CurrencyInput from 'react-native-currency-input';
 
 const screenHeight = Dimensions.get('window').height;
 
-export default function App() {
+const App: React.FC = () => {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [dateModalVisible, setDateModalVisible] = useState(false);
 
   const itemDefault = {
     itemCategory: "",
     itemName: "",
-    itemPrice: 0.0,
+    itemPrice: -1,
     itemStore: "",
     itemLocation: "",
     itemDate: dayjs(),
@@ -37,11 +38,11 @@ export default function App() {
     itemPrice: number;
     itemStore: string;
     itemLocation: string;
-    itemDate: dayjs.Dayjs;
+    itemDate: Dayjs | DateType;
   };
-  const [item, setItem] = useState(itemDefault);
+  const [item, setItem] = useState<ItemType>(itemDefault);
   const [expenses, setExpense] = useState<ItemType[]>([]);
-  const [totalExpense, setTotalExpense] = useState(0);
+  const [totalExpense, setTotalExpense] = useState<number>(0);
 
   const addExpense = (): void => {
     console.log(item);
@@ -73,12 +74,13 @@ export default function App() {
       itemName: input
     });
   };
-  const handleItemPriceChange = (input: string) => {
-    const price = Number(input);
-    if (input === '' || !isNaN(price)) {
+  const handleItemPriceChange = (input: number) => {
+    // const price = Number(input);
+    console.log(input);
+    if (!isNaN(input)) {
       setItem({
         ...item,
-        itemPrice: price,
+        itemPrice: input,
       });
     }
   }
@@ -94,7 +96,7 @@ export default function App() {
       itemLocation: input
     });
   }
-  const handleItemDateChange = (input: dayjs.Dayjs) => {
+  const handleItemDateChange = (input: Dayjs | DateType) => {
     setItem({
       ...item,
       itemDate: input
@@ -128,10 +130,10 @@ export default function App() {
     <View style={styles.container}>
       <SafeAreaView style={[styles.contentContainer, SafeAreaViewAndroid.AndroidSafeArea]}>
         <Text style={styles.header}>EXPENSES</Text>
-        <Text style={styles.moneyHeader}>{'$' + totalExpense}</Text>
+        <Text style={styles.moneyHeader}>{new Intl.NumberFormat("en-IN", { style: 'currency', currency: 'USD' }).format(totalExpense).replace(/\u00A0/g, '')}</Text>
         <View style={styles.list}>
           <Text style={styles.listHeader}>Transactions</Text>
-          <View style={{ gap: 10 }}>
+          {(expenses.length != 0) ? (<View style={{ gap: 10 }}>
             {expenses.map((expense) => 
               <ExpenseListItem
                 key={expenses.indexOf(expense)} // temporary method
@@ -139,8 +141,11 @@ export default function App() {
                 item={expense}
               />
             )}
-          </View>
-        </View>
+          </View>)
+          : (
+            <Text>No expenses added yet</Text>
+          )}
+        </View> 
         <Pressable
           style={styles.modalButton}
           onPress={() => setAddModalVisible(true)}
@@ -241,12 +246,16 @@ export default function App() {
                     />
                     <View style={[styles.rowCenter, { justifyContent: 'flex-end', width: '40%' }]}>
                       <Text style={[styles.itemInputText, styles.itemInput]}>$ </Text>
-                      <TextInput
+                      <CurrencyInput
                         style={[styles.itemInputText, styles.itemInput, { width: '60%'}]}
-                        onChangeText={handleItemPriceChange}
-                        value={item.itemPrice === 0 ? '' : item.itemPrice.toString()}
+                        value={item.itemPrice === -1 ? null : item.itemPrice}
                         placeholder='Price'
-                        keyboardType='decimal-pad'
+                        delimiter=","
+                        separator="."
+                        precision={2}
+                        minValue={0}
+                        onChangeValue={handleItemPriceChange}
+                        keyboardType='number-pad'
                       />
                     </View>
                   </View>
@@ -414,7 +423,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   itemInputs: {
-    gap: 10,
+    gap: 10, 
   },
   datePickerButton: {
     borderWidth: 2,
@@ -426,3 +435,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+export default App;
