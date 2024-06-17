@@ -157,20 +157,21 @@ const App: React.FC = () => {
         animationType='fade'
         transparent={true}
         visible={addModalVisible || dateModalVisible}
+        statusBarTranslucent
         onRequestClose={() => {
           setAddModalVisible(false);
           setDateModalVisible(false);
         }}
       >
-        <Pressable
-          onPress={() => setAddModalVisible(false)}
-          style={[
-            Platform.OS === 'ios' ? styles.iOSBackdrop : styles.androidBackdrop,
-            styles.backdrop,
-            // doesn't reach top of screen in android, on ios doesn't work
-          ]}
-        />
         <View style={styles.modalCenter}>
+          <Pressable
+            onPress={() => setAddModalVisible(false)}
+            style={[
+              Platform.OS === 'ios' ? styles.iOSBackdrop : styles.androidBackdrop,
+              styles.backdrop,
+              // doesn't reach top of screen in android
+            ]}
+          />
           <View style={styles.modal}>
             <Pressable
               style={styles.closeButton}
