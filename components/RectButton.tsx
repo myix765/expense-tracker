@@ -21,7 +21,6 @@ const RectButton: React.FC<RectButtonProps> = ({ children, width, height, border
     <View style={[{ width: widthPlusPadding }, { height: heightPlusPadding }]}>
       <View style={[styles.rectBorder, styles.bottomRect, { backgroundColor: 'black' }, radius, strokeWidth, dimensions]}></View>
       <View style={[styles.rectBorder, styles.topRect, { backgroundColor: 'white', flexDirection: 'row' }, radius, strokeWidth, dimensions]}>
-        {/* how to center the children */}
         {children}
       </View>
     </View>

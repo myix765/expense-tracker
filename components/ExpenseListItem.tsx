@@ -20,17 +20,18 @@ type ExpenseListItemProps = {
 };
 
 // how does this type work
-const ExpenseListItem: React.FC<ExpenseListItemProps> = ({ item, borderColor, isSearch}) => {
+const ExpenseListItem: React.FC<ExpenseListItemProps> = ({ item, borderColor, isSearch }) => {
   const [isMinimized, setMinimized] = useState(false);
 
   return (
     <ListItem
       borderColor={borderColor}
+      itemType='expense'
     >
       <View style={styles.firstLine}>
         <View style={[styles.firstLine, { width: '88%' }]}>
           <Text style={styles.expenseName}>{item.itemName}</Text>
-          <Text style={styles.expenseCost}>{'$' + item.itemCost}</Text>
+          <Text style={styles.expenseCost}>{(isSearch ? 'Lowest: ' : '') + '$' + item.itemCost}</Text>
         </View>
         <Pressable
           onPress={() => setMinimized(!isMinimized)}
@@ -38,7 +39,7 @@ const ExpenseListItem: React.FC<ExpenseListItemProps> = ({ item, borderColor, is
           <MaterialIcons name={isMinimized ? "remove" : "add"} size={20} color="black" />
         </Pressable>
       </View>
-      {isMinimized && <View style={{ marginHorizontal: 12, marginTop: 4, gap: 4 }}>
+      {isMinimized && <View style={styles.fields}>
         <View style={styles.rowCenter}>
           <Text style={styles.expenseSubheader}>STORE: </Text>
           <Text style={styles.expenseField}>{item.itemStore}</Text>
@@ -56,13 +57,14 @@ const ExpenseListItem: React.FC<ExpenseListItemProps> = ({ item, borderColor, is
         </Pressable>}
       </View>}
     </ListItem>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   expenseName: {
     fontFamily: 'Poppins_600SemiBold',
     fontSize: 15,
+    textTransform: 'capitalize',
   },
   expenseCost: {
     fontFamily: 'Poppins_500Medium',
@@ -75,8 +77,9 @@ const styles = StyleSheet.create({
   expenseField: {
     fontFamily: 'Poppins_500Medium',
     fontSize: 14,
+    textTransform: 'capitalize',
   },
-  subText: {
+  subText: { //shared
     fontFamily: 'Poppins_500Medium',
     fontSize: 12,
   },
@@ -84,7 +87,8 @@ const styles = StyleSheet.create({
   firstLine: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    width: '100%',
   },
   rowCenter: {
     flexDirection: 'row',
@@ -94,6 +98,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 10,
   },
-})
+  fields: {
+    paddingHorizontal: 12,
+    marginTop: 4,
+    gap: 4,
+    width: '100%'
+  }
+});
 
 export default ExpenseListItem;

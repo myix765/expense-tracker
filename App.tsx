@@ -1,6 +1,8 @@
 import { Text, StyleSheet } from "react-native";
 import ExpenseScreen from "./screens/ExpenseScreen";
+
 import SearchScreen from "./screens/SearchScreen";
+import BudgetScreen from "./screens/BudgetScreen";
 
 import {
   useFonts,
@@ -18,8 +20,8 @@ const App: React.FC = () => {
     return <Text>Loading...</Text>
   }
 
-  return <SearchScreen />;
-}
+  return <BudgetScreen />;
+};
 
 const styles = StyleSheet.create({
 

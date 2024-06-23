@@ -119,6 +119,7 @@ const ExpenseScreen: React.FC = () => {
                 key={expenses.indexOf(expense)} // temporary method
                 borderColor={'orange'}
                 item={expense}
+                isSearch={false}
               />
             )}
           </View>)
@@ -285,7 +286,7 @@ const ExpenseScreen: React.FC = () => {
       <NavBar />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

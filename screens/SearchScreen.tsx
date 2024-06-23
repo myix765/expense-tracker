@@ -29,7 +29,7 @@ const SearchScreen: React.FC = () => {
   };
 
   return (
-    <View style={{flex: 1, alignItems: 'center'}}>
+    <View style={{ flex: 1, alignItems: 'center' }}>
       <SafeAreaView style={[styles.contentContainer, SafeAreaViewAndroid.AndroidSafeArea]}>
         <Text style={styles.header}>Expense Search</Text>
         <View style={styles.searchBox}>
@@ -61,8 +61,8 @@ const SearchScreen: React.FC = () => {
         </View>
       </SafeAreaView>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   header: { // shared
