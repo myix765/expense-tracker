@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-interface RectButtonProps {
+type RectButtonProps = {
   width: number;
   text: string;
 }

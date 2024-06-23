@@ -6,11 +6,11 @@ import { Dayjs } from 'dayjs';
 import { DateType } from 'react-native-ui-datepicker';
 import ListItem from './ListItem';
 
-interface ExpenseListItemProps {
+type ExpenseListItemProps = {
   item: {
     itemCategory: string;
     itemName: string;
-    itemPrice: number;
+    itemCost: number;
     itemStore: string;
     itemLocation: string;
     itemDate: Dayjs | DateType;
@@ -28,7 +28,7 @@ const ExpenseListItem: React.FC<ExpenseListItemProps> = ({ item, borderColor}) =
       <View style={styles.firstLine}>
         <View style={[styles.firstLine, { width: '88%' }]}>
           <Text style={styles.expenseName}>{item.itemName}</Text>
-          <Text style={styles.expensePrice}>{'$' + item.itemPrice}</Text>
+          <Text style={styles.expenseCost}>{'$' + item.itemCost}</Text>
         </View>
         <Pressable
           onPress={() => setMinimized(!isMinimized)}
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins_600SemiBold',
     fontSize: 15,
   },
-  expensePrice: {
+  expenseCost: {
     fontFamily: 'Poppins_500Medium',
     fontSize: 15,
   },
