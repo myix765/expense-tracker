@@ -1,23 +1,28 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 type RectButtonProps = {
+  children: React.ReactNode;
   width: number;
-  text: string;
+  height: number;
+  borderRadius: number;
+  borderWidth: number;
+
 }
 
-const RectButton: React.FC<RectButtonProps> = ({ width, text }) => {
-  const padddingOffset = 4;
-  const height = 46;
-  const rectWidth = { width: width };
-  const rectHeight = { height: height };
-  const widthPlusPadding = { width: width + padddingOffset };
-  const heightPlusPadding = { height: height + padddingOffset};
+const RectButton: React.FC<RectButtonProps> = ({ children, width, height, borderRadius, borderWidth }) => {
+  const paddingOffset = 4;
+  const dimensions = { width: width, height: height }
+  const widthPlusPadding = width + paddingOffset;
+  const heightPlusPadding = height + paddingOffset;
+  const radius = { borderRadius: borderRadius }
+  const strokeWidth = { borderWidth: borderWidth }
 
   return (
-    <View style={[widthPlusPadding, heightPlusPadding]}>
-      <View style={[styles.rectBorder, styles.bottomRect, { backgroundColor: 'black' }, rectWidth, rectHeight]}></View>
-      <View style={[styles.rectBorder, styles.topRect, { backgroundColor: 'white'}, rectWidth, rectHeight]}>
-        <Text style={styles.buttonText}>{ text }</Text>
+    <View style={[{ width: widthPlusPadding }, { height: heightPlusPadding }]}>
+      <View style={[styles.rectBorder, styles.bottomRect, { backgroundColor: 'black' }, radius, strokeWidth, dimensions]}></View>
+      <View style={[styles.rectBorder, styles.topRect, { backgroundColor: 'white', flexDirection: 'row' }, radius, strokeWidth, dimensions]}>
+        {/* how to center the children */}
+        {children}
       </View>
     </View>
   )
@@ -26,8 +31,6 @@ const RectButton: React.FC<RectButtonProps> = ({ width, text }) => {
 const styles = StyleSheet.create({
   rectBorder: {
     borderColor: 'black',
-    borderWidth: 2.5,
-    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -40,10 +43,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0,
-  },
-  buttonText: {
-    fontFamily: 'Poppins_500Medium',
-    fontSize: 15,
   },
 })
 

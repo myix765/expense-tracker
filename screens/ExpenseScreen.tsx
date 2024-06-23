@@ -1,10 +1,5 @@
 import { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Pressable, Modal, Platform, TextInput, Dimensions } from 'react-native';
-import {
-  useFonts,
-  Poppins_500Medium,
-  Poppins_600SemiBold,
-} from '@expo-google-fonts/poppins';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import CurrencyInput from 'react-native-currency-input';
 import dayjs, { Dayjs } from 'dayjs';
@@ -21,8 +16,8 @@ import { ItemType } from '../constants/globalTypes';
 const screenHeight = Dimensions.get('window').height;
 
 const ExpenseScreen: React.FC = () => {
-  const [addModalVisible, setAddModalVisible] = useState(false);
-  const [dateModalVisible, setDateModalVisible] = useState(false);
+  const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
+  const [dateModalVisible, setDateModalVisible] = useState<boolean>(false);
 
   const itemDefault = {
     itemCategory: "",
@@ -49,13 +44,13 @@ const ExpenseScreen: React.FC = () => {
     setAddModalVisible(false);
     setDateModalVisible(false);
   }
-  
+
   // need to work on this
   type CategoryType = {
     title: string;
     icon: string;
     color: string;
-}
+  }
   const handleItemCategoryChange = (input: CategoryType) => {
     setItem({
       ...item,
@@ -111,15 +106,6 @@ const ExpenseScreen: React.FC = () => {
     }
   ]
 
-  const [fontsLoaded] = useFonts({
-    Poppins_500Medium,
-    Poppins_600SemiBold,
-  });
-
-  if (!fontsLoaded) {
-    return <Text>Loading...</Text>
-  }
-
   return (
     <View style={styles.container}>
       <SafeAreaView style={[styles.contentContainer, SafeAreaViewAndroid.AndroidSafeArea]}>
@@ -128,7 +114,7 @@ const ExpenseScreen: React.FC = () => {
         <View style={styles.list}>
           <Text style={styles.listHeader}>Transactions</Text>
           {(expenses.length != 0) ? (<View style={{ gap: 10 }}>
-            {expenses.map((expense) => 
+            {expenses.map((expense) =>
               <ExpenseListItem
                 key={expenses.indexOf(expense)} // temporary method
                 borderColor={'orange'}
@@ -136,15 +122,15 @@ const ExpenseScreen: React.FC = () => {
               />
             )}
           </View>)
-          : (
-            <Text>No expenses added yet</Text>
-          )}
+            : (
+              <Text>No expenses added yet</Text>
+            )}
         </View>
         <Pressable
           style={styles.modalButton}
           onPress={() => setAddModalVisible(true)}
         >
-          <AddButton/>
+          <AddButton />
         </Pressable>
       </SafeAreaView>
       <Modal
@@ -173,14 +159,14 @@ const ExpenseScreen: React.FC = () => {
                 setItem(itemDefault);
               }}
             >
-              <MaterialIcons name='close' size={22} color={'black'}/>
+              <MaterialIcons name='close' size={22} color={'black'} />
             </Pressable>
             {dateModalVisible ? (
               <View style={{ marginTop: '8%' }}>
                 <DateTimePicker
                   mode="single"
                   date={item.itemDate}
-                  onChange={date => {handleItemDateChange(date.date)}}
+                  onChange={date => { handleItemDateChange(date.date) }}
                 />
               </View>
             ) : (
@@ -192,7 +178,7 @@ const ExpenseScreen: React.FC = () => {
                     onSelect={(selectedCategory) => handleItemCategoryChange(selectedCategory)}
                     renderButton={(selectedCategory, isOpen) => {
                       return (
-                        <View style={[styles.categoryDropdownButton, { borderColor: (selectedCategory && selectedCategory.color) || 'black' , paddingRight: 6 }]}>
+                        <View style={[styles.categoryDropdownButton, { borderColor: (selectedCategory && selectedCategory.color) || 'black', paddingRight: 6 }]}>
                           <View style={[styles.rowCenter, styles.categorySelectorItem]}>
                             {selectedCategory && (
                               <MaterialIcons
@@ -241,7 +227,7 @@ const ExpenseScreen: React.FC = () => {
                     <View style={[styles.rowCenter, { justifyContent: 'flex-end', width: '40%' }]}>
                       <Text style={[styles.itemInputText, styles.itemInput]}>$ </Text>
                       <CurrencyInput
-                        style={[styles.itemInputText, styles.itemInput, { width: '60%'}]}
+                        style={[styles.itemInputText, styles.itemInput, { width: '60%' }]}
                         value={item.itemCost === -1 ? null : item.itemCost}
                         placeholder='Cost'
                         delimiter=","
@@ -284,15 +270,19 @@ const ExpenseScreen: React.FC = () => {
                 >
                   <RectButton
                     width={208}
-                    text={'Add Expense'}
-                  />
+                    height={46}
+                    borderRadius={12}
+                    borderWidth={2.5}
+                  >
+                    <Text style={styles.buttonText}>Add Expense</Text>
+                  </RectButton>
                 </Pressable>
               </View>
             )}
           </View>
         </View>
       </Modal>
-      <NavBar/>
+      <NavBar />
     </View>
   );
 }
@@ -318,6 +308,10 @@ const styles = StyleSheet.create({
   moneyHeader: {
     fontFamily: 'Poppins_500Medium',
     fontSize: 40,
+  },
+  buttonText: {
+    fontFamily: 'Poppins_500Medium',
+    fontSize: 15,
   },
   listHeader: {
     fontFamily: 'Poppins_500Medium',
@@ -413,7 +407,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
   itemInputs: {
-    gap: 10, 
+    gap: 10,
   },
   datePickerButton: {
     borderWidth: 2,

@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 
-interface ListItemProps {
+type ListItemProps = {
   children: React.ReactNode;
   borderColor: string;
 }

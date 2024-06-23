@@ -16,9 +16,11 @@ type ExpenseListItemProps = {
     itemDate: Dayjs | DateType;
   };
   borderColor: string;
-}
+  isSearch: boolean;
+};
 
-const ExpenseListItem: React.FC<ExpenseListItemProps> = ({ item, borderColor}) => {
+// how does this type work
+const ExpenseListItem: React.FC<ExpenseListItemProps> = ({ item, borderColor, isSearch}) => {
   const [isMinimized, setMinimized] = useState(false);
 
   return (
@@ -49,6 +51,9 @@ const ExpenseListItem: React.FC<ExpenseListItemProps> = ({ item, borderColor}) =
           <Text style={styles.expenseSubheader}>Date Purchased: </Text>
           <Text style={styles.expenseField}>{item.itemDate.format('MM/DD/YY')}</Text>
         </View>
+        {isSearch && <Pressable>
+          <Text style={[styles.seeOtherButton, styles.subText]}>see other item purchases</Text>
+        </Pressable>}
       </View>}
     </ListItem>
   )
@@ -71,6 +76,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins_500Medium',
     fontSize: 14,
   },
+  subText: {
+    fontFamily: 'Poppins_500Medium',
+    fontSize: 12,
+  },
+
   firstLine: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -79,6 +89,10 @@ const styles = StyleSheet.create({
   rowCenter: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  seeOtherButton: {
+    alignSelf: 'center',
+    marginTop: 10,
   },
 })
 
