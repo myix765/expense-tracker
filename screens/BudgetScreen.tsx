@@ -8,7 +8,7 @@ const BudgetScreen = () => {
     <View style={{ flex: 1, alignItems: 'center' }}>
       <SafeAreaView style={[styles.contentContainer, SafeAreaViewAndroid.AndroidSafeArea]}>
         <Text style={styles.header}>Budget Planner</Text>
-        <Text style={styles.subheader}>Total</Text>
+        <Text style={[styles.subheader, { marginTop: 12 }]}>Total</Text>
         <View style={styles.totalBudget}>
           <Text style={styles.moneyHeader}>$300.16</Text>
           <Text style={[styles.subMoneyHeader, { lineHeight: 40 }]}> / $600.0</Text>

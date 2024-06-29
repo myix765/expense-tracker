@@ -20,7 +20,7 @@ const App: React.FC = () => {
     return <Text>Loading...</Text>
   }
 
-  return <BudgetScreen />;
+  return <ExpenseScreen />;
 };
 
 const styles = StyleSheet.create({

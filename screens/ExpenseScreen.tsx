@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Pressable, Modal, Platform, TextInput, Dimensions } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Pressable, Modal, Platform, TextInput, Dimensions, FlatList } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import CurrencyInput from 'react-native-currency-input';
 import dayjs, { Dayjs } from 'dayjs';
@@ -32,17 +32,56 @@ const ExpenseScreen: React.FC = () => {
   const [expenses, setExpense] = useState<ItemType[]>([]);
   const [totalExpense, setTotalExpense] = useState<number>(0);
 
+  const [isItemCategoryValid, changeIsItemCategoryValid] = useState<boolean>(false);
+  const [isItemNameValid, changeIsItemNameValid] = useState<boolean>(false);
+  const [isItemCostValid, changeIsItemCostValid] = useState<boolean>(false);
+  const [isItemStoreValid, changeIsItemStoreValid] = useState<boolean>(false);
+  const [isItemLocationValid, changeIsItemLocationValid] = useState<boolean>(false);
+  const [addedInvalid, changeAddedInvalid] = useState<boolean>(false);
+
+  const validateAddItem = () => {
+    if (item.itemCategory != itemDefault.itemCategory) {
+      changeIsItemCategoryValid(true);
+    }
+    if (item.itemName != itemDefault.itemName) {
+      changeIsItemNameValid(true);
+    }
+    if (item.itemCost != itemDefault.itemCost) {
+      changeIsItemCostValid(true);
+    }
+    if (item.itemStore != itemDefault.itemStore) {
+      changeIsItemStoreValid(true);
+    }
+    if (item.itemLocation != itemDefault.itemLocation) {
+      changeIsItemLocationValid(true);
+    }
+  }
+
+  const resetValidToFalse = (): void => {
+    changeIsItemCategoryValid(false);
+    changeIsItemNameValid(false);
+    changeIsItemCostValid(false);
+    changeIsItemStoreValid(false);
+    changeIsItemLocationValid(false);
+    changeAddedInvalid(false);
+  }
+
   const addExpense = (): void => {
     console.log(item);
-    setExpense((currentExpenses) => [
-      ...currentExpenses,
-      item,
-    ]);
-    setTotalExpense(totalExpense + item.itemCost);
+    validateAddItem();
+    if (isItemCategoryValid && isItemNameValid && isItemCostValid && isItemStoreValid && isItemLocationValid) {
+      setExpense((currentExpenses) => [
+        ...currentExpenses,
+        item,
+      ]);
+      setTotalExpense(totalExpense + item.itemCost);
 
-    setItem(itemDefault);
-    setAddModalVisible(false);
-    setDateModalVisible(false);
+      setItem(itemDefault);
+      setAddModalVisible(false);
+      setDateModalVisible(false);
+    } else {
+      changeAddedInvalid(true);
+    }
   }
 
   // need to work on this
@@ -66,10 +105,15 @@ const ExpenseScreen: React.FC = () => {
   const handleItemCostChange = (input: number) => {
     const cost = Number(input);
     console.log(input);
-    if (!isNaN(input)) {
+    if (input !== null) {
       setItem({
         ...item,
         itemCost: input,
+      });
+    } else {
+      setItem({
+        ...item,
+        itemCost: -1,
       });
     }
   }
@@ -113,16 +157,23 @@ const ExpenseScreen: React.FC = () => {
         <Text style={styles.moneyHeader}>{new Intl.NumberFormat("en-IN", { style: 'currency', currency: 'USD' }).format(totalExpense).replace(/\u00A0/g, '')}</Text>
         <View style={styles.list}>
           <Text style={styles.listHeader}>Transactions</Text>
-          {(expenses.length != 0) ? (<View style={{ gap: 10 }}>
-            {expenses.map((expense) =>
-              <ExpenseListItem
-                key={expenses.indexOf(expense)} // temporary method
-                borderColor={'orange'}
-                item={expense}
-                isSearch={false}
-              />
-            )}
-          </View>)
+          {(expenses.length != 0) ? (
+            <FlatList
+              data={expenses}
+              renderItem={(expenseData) => {
+                return (
+                  <ExpenseListItem
+                    borderColor={'orange'}
+                    item={expenseData.item}
+                    isSearch={false}
+                  />
+                )
+              }}
+              // keyExtractor={expense => expense.expense_id} // handle this later
+              contentContainerStyle={{ gap: 10 }}
+              alwaysBounceVertical={false}
+            />
+          )
             : (
               <Text>No expenses added yet</Text>
             )}
@@ -134,6 +185,7 @@ const ExpenseScreen: React.FC = () => {
           <AddButton />
         </Pressable>
       </SafeAreaView>
+      <NavBar />
       <Modal
         animationType='fade'
         transparent={true}
@@ -283,7 +335,6 @@ const ExpenseScreen: React.FC = () => {
           </View>
         </View>
       </Modal>
-      <NavBar />
     </View>
   );
 };
@@ -291,7 +342,6 @@ const ExpenseScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -320,6 +370,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   list: {
+    flex: 1,
     width: '100%',
     marginTop: 16,
   },

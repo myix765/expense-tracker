@@ -5,11 +5,11 @@ const NavBar: React.FC = () => {
   return (
     <View style={styles.navBar}>
       <Pressable style={styles.navLink}>
-        <MaterialIcons name='payment' size={32} color={'black'}/>
+        <MaterialIcons name='payment' size={32} color={'black'} />
         <Text style={styles.navLinkText}>expenses</Text>
       </Pressable>
       <Pressable style={styles.navLink}>
-        <MaterialIcons name='search' size={32} color={'black'}/>
+        <MaterialIcons name='search' size={32} color={'black'} />
         <Text style={styles.navLinkText}>search</Text>
       </Pressable>
       <Pressable style={styles.navLink}>
@@ -22,6 +22,7 @@ const NavBar: React.FC = () => {
 
 const styles = StyleSheet.create({
   navBar: {
+    backgroundColor: '#fff',
     borderTopWidth: 3,
     borderTopColor: 'black',
     width: '100%',
